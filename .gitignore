@@ -1,0 +1,15 @@
+*.mp4
+*.wav
+*.png
+*.gif
+*.mkv
+build/
+out/
+__pycache__/
+.venv/
+*.ifs
+out/
+build/
+.venv/
+PLAN.md
+STATE.md
