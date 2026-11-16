@@ -39,6 +39,8 @@ def build_model():
         a.ctrlrange = [-lim[i], lim[i]]
         a.gear[0] = 1.0
     spec.option.timestep = 0.001
+    spec.visual.global_.offwidth = 1280
+    spec.visual.global_.offheight = 720
     # floor + light for the renders
     w = spec.worldbody
     w.add_geom(type=mujoco.mjtGeom.mjGEOM_PLANE, size=[1.5, 1.5, 0.05], rgba=[0.82, 0.84, 0.86, 1])
