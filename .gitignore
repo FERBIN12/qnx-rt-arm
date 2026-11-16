@@ -13,3 +13,7 @@ build/
 .venv/
 PLAN.md
 STATE.md
+vm/
+vm-extra/
+vm-key/
+*.log
