@@ -17,3 +17,4 @@ vm/
 vm-extra/
 vm-key/
 *.log
+third_party/
