@@ -38,10 +38,11 @@ static uint64_t now_ns(void) {
 /* ---- periodic tick source ---- */
 #ifdef __QNX__
 static int chid = -1;
-static void tick_init(void) {
+static void tick_init(int pprio) {
+    /* explicit pulse priority: the receiving thread runs at the pulse's priority, so it must match -r */
     chid = ChannelCreate(_NTO_CHF_PRIVATE);
     int coid = ConnectAttach(0, 0, chid, _NTO_SIDE_CHANNEL, 0);
-    struct sigevent ev; SIGEV_PULSE_INIT(&ev, coid, SIGEV_PULSE_PRIO_INHERIT, _PULSE_CODE_MINAVAIL, 0);
+    struct sigevent ev; SIGEV_PULSE_INIT(&ev, coid, pprio, _PULSE_CODE_MINAVAIL, 0);
     timer_t tid; if (timer_create(CLOCK_MONOTONIC, &ev, &tid) == -1) { perror("timer_create"); exit(1); }
     struct itimerspec it = {{0, PERIOD_NS}, {0, PERIOD_NS}};
     timer_settime(tid, 0, &it, NULL);
@@ -49,7 +50,7 @@ static void tick_init(void) {
 static void tick_wait(void) { struct _pulse p; MsgReceivePulse(chid, &p, sizeof p, NULL); }
 #else
 static struct timespec next;
-static void tick_init(void) { clock_gettime(CLOCK_MONOTONIC, &next); }
+static void tick_init(int pprio) { (void)pprio; clock_gettime(CLOCK_MONOTONIC, &next); }
 static void tick_wait(void) {
     next.tv_nsec += PERIOD_NS;
     while (next.tv_nsec >= 1000000000L) { next.tv_nsec -= 1000000000L; next.tv_sec++; }
@@ -76,7 +77,7 @@ int main(int argc, char **argv) {
     uint64_t *tk = calloc(n, sizeof *tk); uint32_t *st = calloc(n, sizeof *st); uint8_t *es = calloc(n, 1);
     rtarm_state_t x; memset(&x, 0, sizeof x); int have = 0; uint64_t last_rx = 0; int estop = 0; uint32_t estop_tick = 0;
     double q0[RTARM_NJ]; for (int j = 0; j < RTARM_NJ; j++) q0[j] = HOME[j];
-    tick_init();
+    tick_init(prio > 0 ? prio : 10);
     rtarm_cmd_t cmd = {.magic = RTARM_CMD_MAGIC};
     sendto(s, &cmd, sizeof cmd, 0, (struct sockaddr *)&dst, sizeof dst); /* hello: plant learns our address */
     for (long k = 0; k < n; k++) {
