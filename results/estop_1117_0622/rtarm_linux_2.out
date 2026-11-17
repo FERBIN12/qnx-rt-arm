@@ -1,0 +1,2 @@
+rtarm: WATCHDOG e-stop at tick 2521, last state 21.0 ms ago
+rtarm linux: ticks=4000 period_us mean=1000.00 sd=222.59 min=9.2 max=4126.8 late>1.1ms=30 estop=1 estop_tick=2521

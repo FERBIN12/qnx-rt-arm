@@ -1,0 +1,3 @@
+run                                trials estops  min ms  mean ms  max ms
+Linux + hog (normal prio)              10     10   20.00    20.30   21.00
+QNX + 2 hogs, ctl prio 50              10     10   20.00    20.70   21.00

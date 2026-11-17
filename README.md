@@ -101,6 +101,23 @@ plant's tracking error. Without QNX you can still try the Linux build: `make lin
 runs Linux, QNX at prio 10 and QNX at prio 50, then writes `out/stress_<stamp>/table.txt` and a histogram.
 Run it yourself and compare with the table above; your numbers will differ with your hardware and load.
 
+### Step 6. Pull the plug: e-stop latency
+
+`scripts/estop_bench.sh 10` makes the plant exit 2.5 s into each run (link lost) while the controller keeps
+ticking, 10 trials per side, with the same hogs as Step 5. `scripts/estop_latency.py` reads each tick log and
+measures controller time from the last tick that received a fresh plant state to the tick that latched e-stop.
+Our run (`results/estop_1117_0622/`, host load 5.6 to 8.0):
+
+| Run | Trials | E-stop latched | Min | Mean | Max |
+|---|---|---|---|---|---|
+| Linux + hog (normal prio) | 10 | 10 | 20.00 ms | 20.30 ms | 21.00 ms |
+| QNX + 2 hogs, controller prio 50 | 10 | 10 | 20.00 ms | 20.70 ms | 21.00 ms |
+
+Both sides hit the 20 ms watchdog within one tick, because the check is time-based. The honest takeaway is that
+the e-stop itself is not where QNX wins here; the loop is. In the same 20 trials the Linux loop had tick periods up
+to 4.3 ms (28 to 48 late ticks per 4 s run, sd 189 to 222 us), which means the arm went up to 4 ms without a fresh
+command, while the QNX loop stayed between sd 3.8 and 16.7 us with 0 to 8 late ticks (worst single period 1.73 ms).
+
 ### The bug worth learning from: pulse priority
 
 The first version used `SIGEV_PULSE_PRIO_INHERIT` for the timer pulse. On QNX the thread that receives a pulse

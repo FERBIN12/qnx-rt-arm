@@ -1,0 +1,3 @@
+rtarm: SCHED_FIFO prio 50 ok
+rtarm: WATCHDOG e-stop at tick 2520, last state 20.0 ms ago
+rtarm qnx: ticks=4000 period_us mean=999.97 sd=4.74 min=888.9 max=1072.6 late>1.1ms=0 estop=1 estop_tick=2520
