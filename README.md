@@ -13,6 +13,10 @@ measure, side by side, what a real-time OS buys you when the CPU is busy.
 | QNX 8.0, 2 CPU hogs at prio 10, controller at prio 10 | 7097.9 us | 2566.9 us | 15981.0 us | 19996.9 us | 7999 / 8000 |
 | QNX 8.0, 2 CPU hogs at prio 10, controller at **prio 50** | **1000.0 us** | **5.9 us** | **1013.5 us** | **1114.7 us** | **1 / 8000** |
 
+![Loop period histograms, one panel per run](https://github.com/FERBIN12/qnx-rt-arm/releases/download/media-v1/jitter_panels.png)
+
+(Plot: `scripts/plot_panels.py` on the tick logs in `results/`.)
+
 Read it honestly: the Linux run is plain `SCHED_OTHER` (this laptop has no root for `SCHED_FIFO`), so it is
 "Linux as most people run it", not tuned PREEMPT_RT. The middle row is the point of QNX scheduling: at the same
 priority as the hogs the controller only gets round-robin slices and misses almost every deadline; one priority
