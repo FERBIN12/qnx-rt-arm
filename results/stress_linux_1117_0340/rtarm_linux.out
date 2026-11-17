@@ -1,0 +1,1 @@
+rtarm linux: ticks=8000 period_us mean=999.67 sd=247.12 min=12.2 max=4660.5 late>1.1ms=88 estop=0

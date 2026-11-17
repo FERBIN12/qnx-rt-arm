@@ -10,7 +10,7 @@ D=out/stress_$(date +%m%d_%H%M); mkdir -p "$D"; echo "host load at start $(cut -
 # Linux: hog + controller share core 10, plant on core 11 (QEMU threads are on cores 12-15)
 taskset -c 10 sh -c 'while :; do :; done' & H=$!
 taskset -c 11 .venv/bin/python host/plant.py --listen 127.0.0.1:47400 --log "$D/plant_linux.csv" --duration 9 > "$D/plant_linux.out" 2>&1 & P=$!
-sleep 1.5; taskset -c 10 ./build/rtarm-linux -p 127.0.0.1 -P 47400 -s 8 -l "$D/linux_hog.csv" > "$D/rtarm_linux.out" 2>&1 || true
+sleep 1.5; kill -0 $P 2>/dev/null || { echo "plant did not start (port 47400 in use?)"; cat "$D"/plant_*.out; exit 1; }; taskset -c 10 ./build/rtarm-linux -p 127.0.0.1 -P 47400 -s 8 -l "$D/linux_hog.csv" > "$D/rtarm_linux.out" 2>&1 || true
 kill $H; wait $P 2>/dev/null || true
 # QNX: start 2 hogs at prio 10 in the guest, remember their pids
 "${SSH[@]}" 'for i in 1 2; do on -p 10 ksh -c "while :; do :; done" > /dev/null 2>&1 & echo $!; done' > "$D/qnx_hog_pids.txt"
@@ -18,7 +18,7 @@ sleep 1
 for MODE in noprio prio50; do
   A=""; [ $MODE = prio50 ] && A="-r 50"
   taskset -c 11 .venv/bin/python host/plant.py --listen 127.0.0.1:47400 --log "$D/plant_qnx_$MODE.csv" --duration 9 > "$D/plant_qnx_$MODE.out" 2>&1 & P=$!
-  sleep 1.5
+  sleep 1.5; kill -0 $P 2>/dev/null || { echo "plant did not start (port 47400 in use?)"; cat "$D"/plant_*.out; exit 1; }; 
   "${SSH[@]}" "/data/home/root/rtarm -p 10.0.2.2 -P 47400 -s 8 $A -l /data/home/root/t_$MODE.csv" > "$D/rtarm_qnx_$MODE.out" 2>&1 || true
   "${SSH[@]}" "cat /data/home/root/t_$MODE.csv" > "$D/qnx_hog_$MODE.csv"
   wait $P 2>/dev/null || true

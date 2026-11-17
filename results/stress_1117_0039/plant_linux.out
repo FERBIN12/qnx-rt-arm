@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "./host/plant.py", line 104, in <module>
+    main()
+  File "./host/plant.py", line 62, in main
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM); s.bind((host, int(port))); s.settimeout(a.brake_ms / 1000.0)
+                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 98] Address already in use

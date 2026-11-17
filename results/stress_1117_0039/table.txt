@@ -1,0 +1,9 @@
+run                           ticks     mean      sd      p99      max  late
+----------------------------------------------------------------------------
+Linux + hog                    8000    999.7   217.2   1730.0   4754.9    82
+QNX + hogs, prio 10            8000   7097.9  2566.9  15981.0  19996.9  7999
+QNX + hogs, prio 50            8000   1000.0     5.9   1013.5   1114.7     1
+(us; late = period > 1.1 x nominal)
+wrote out/stress_1117_0039/jitter.png
+out/stress_1117_0039/plant_qnx_noprio.csv: rows=7999 track_err_rad max=0.0035 mean=0.00064
+out/stress_1117_0039/plant_qnx_prio50.csv: rows=7999 track_err_rad max=0.0035 mean=0.00064

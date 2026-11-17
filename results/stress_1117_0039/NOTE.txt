@@ -1,0 +1,5 @@
+The Linux row of this run is NOT used in the README: the MuJoCo plant for the Linux run failed to bind UDP 47400
+(plant_linux.out: Address already in use), so the controller lost plant state after 1.5 s and latched its watchdog
+e-stop. Its tick timing is still a valid measurement (the loop never waits on the network), but the closed loop
+was incomplete, so the Linux row was rerun on its own in ../stress_linux_1117_0340 with the same commands.
+The two QNX rows here are complete closed-loop runs.

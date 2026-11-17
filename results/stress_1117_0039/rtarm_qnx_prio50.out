@@ -1,0 +1,2 @@
+rtarm: SCHED_FIFO prio 50 ok
+rtarm qnx: ticks=8000 period_us mean=1000.00 sd=5.86 min=895.1 max=1114.7 late>1.1ms=1 estop=0

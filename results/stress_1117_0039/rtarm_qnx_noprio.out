@@ -1,0 +1,1 @@
+rtarm qnx: ticks=8000 period_us mean=7097.89 sd=2566.89 min=3847.2 max=19996.9 late>1.1ms=7999 estop=0
